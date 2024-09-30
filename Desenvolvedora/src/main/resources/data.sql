@@ -1,0 +1,1 @@
+INSERT INTO DESENVOLVEDORA(nome,porte) VALUES ('fromSoftware','Grande')
