@@ -1,17 +1,13 @@
-/*package com.infnet.Carrinho.service.Impl;
+package com.infnet.Carrinho.service.Impl;
 
 import com.infnet.Carrinho.Repository.CarrinhoRepository;
 import com.infnet.Carrinho.model.Carrinho;
-import com.infnet.Carrinho.model.ItemCarrinho;
 import com.infnet.Carrinho.model.Jogos;
 import com.infnet.Carrinho.service.CarrinhoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +17,19 @@ import java.util.Optional;
 public class CarrinhoServiceImpl implements CarrinhoService {
 
     private final CarrinhoRepository carrinhoRepository;
-    private final List<ItemCarrinho> itensCarrinho;
+    private final List<Jogos> jogosCarrinho;
     private final RestTemplate restTemplate;
 
     private final String jogosServiceUrl = "http://localhost:8081/";
 
 
     @Override
-    public Carrinho addItem(long carrinhoId, long jogoId, int quantidadeItem) {
+    public Carrinho salvar(Carrinho carrinho) {
+        return carrinhoRepository.save(carrinho);
+    }
+
+    @Override
+    public CarrinhoServiceImpl addItem(long carrinhoId, long jogoId, int quantidadeItem) {
         // Faz uma requisição ao microsserviço de jogos para buscar os detalhes do jogo
         Jogos jogo = restTemplate.getForObject(jogosServiceUrl + jogoId, Jogos.class);
 
@@ -37,26 +38,25 @@ public class CarrinhoServiceImpl implements CarrinhoService {
 
         if (optionalCarrinho.isPresent() && jogo != null) {
             Carrinho carrinho = optionalCarrinho.get();
-            boolean itemExistente = false;
+            boolean jogoExistente = false;
 
-            // Verifica se o jogo já existe no carrinho
-            for (ItemCarrinho item : carrinho.getItens()) {
-                if (item.getId().) {
+            for (Jogos jogosCarrinho : carrinho.getJogosCarrinho()) {
+                if (jogosCarrinho.getId() == jogo.getId()) {
                     // Se o jogo já está no carrinho, atualiza a quantidade
-                    item.setQuantidade(item.getQuantidade() + quantidadeItem);
-                    itemExistente = true;
+                    jogosCarrinho.setQuantidade(jogosCarrinho.getQuantidade() + quantidadeItem);
+                    jogoExistente = true;
                     break;
                 }
             }
 
             // Se o jogo não estava no carrinho, cria um novo item
-            if (!itemExistente) {
-                ItemCarrinho novoItem = new ItemCarrinho();
-                novoItem.setId(jogoId);
-                novoItem.setNome(jogo.getNome());
-                novoItem.setPreco(jogo.getPreco());
-                novoItem.setQuantidade(quantidadeItem);
-                carrinho.getItens().add(novoItem);
+            if (!jogoExistente) {
+                Jogos novoJogo = new Jogos();
+                novoJogo.setId(jogoId);
+                novoJogo.setNome(jogo.getNome());
+                novoJogo.setPreco(jogo.getPreco());
+                novoJogo.setQuantidade(jogo.getQuantidade());
+                carrinho.getJogosCarrinho().add(novoJogo);
             }
 
             // Atualiza o carrinho no repositório
@@ -100,4 +100,3 @@ public class CarrinhoServiceImpl implements CarrinhoService {
     }
 
 }
-*/

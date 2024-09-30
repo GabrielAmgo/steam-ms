@@ -11,13 +11,17 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 @Data@NoArgsConstructor@AllArgsConstructor@Builder
+@Entity
 
 public class Jogos {
-    private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long Id;
     private String nome;
     private String genero;
     private BigDecimal preco;
     private String desenvolvedora;
     private long desenvolvedora_id;
+    private long quantidade;
 
 }

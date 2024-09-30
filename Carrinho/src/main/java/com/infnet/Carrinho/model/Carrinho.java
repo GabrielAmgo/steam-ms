@@ -16,7 +16,7 @@ public class  Carrinho {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long carrinhoid;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemCarrinho> itens;
+    private List<Jogos> jogosCarrinho;
     private int quantidadeItem;
 
 }
